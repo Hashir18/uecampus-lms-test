@@ -1,0 +1,243 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
+import { GraduationCap, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { z } from "zod";
+import { apiFetch } from "@/lib/api";
+import { useAuth } from "@/hooks/useAuth";
+
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address").trim().toLowerCase(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const rawBase =
+  (import.meta.env.VITE_BASENAME as string | undefined) ||
+  (import.meta.env.BASE_URL as string | undefined) ||
+  "/";
+const BASENAME =
+  rawBase === "/"
+    ? ""
+    : `/${rawBase.replace(/^\/+|\/+$/g, "")}`;
+
+export default function Auth() {
+  const navigate = useNavigate();
+  const { login } = useAuth(); // Only need login function
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    toast.dismiss();
+    setLoading(true);
+    console.log("[Auth] Login attempt started");
+
+    try {
+      // Validate form
+      const validated = loginSchema.parse({ email, password });
+      console.log("[Auth] Form validation passed");
+
+      // Make API call
+      console.log("[Auth] Sending request to /auth/login");
+      const res = await apiFetch<{ token: string; user?: any }>("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: validated.email,
+          password: validated.password,
+        }),
+      });
+      
+      console.log("[Auth] API Response:", res);
+
+      if (!res || !res.token) {
+        console.error("[Auth] No token in response:", res);
+        throw new Error("Authentication failed: No token received");
+      }
+
+      // Use the login function from useAuth - it should handle token and refresh
+      console.log("[Auth] Calling login with token");
+      const success = await login(res.token);
+      
+      if (success) {
+        // IMMEDIATE navigation - don't wait
+        console.log("[Auth] Login successful, navigating to dashboard");
+        
+        // Success message
+        toast.success("Login successful!");
+        
+        // Reset form
+        setEmail("");
+        setPassword("");
+        setFormKey(prev => prev + 1);
+        
+        // Navigate IMMEDIATELY - no timeout
+        const target = BASENAME ? `${BASENAME}/dashboard` : "/dashboard";
+        console.log("[Auth] Navigating to:", target);
+        navigate(target, { replace: true });
+      } else {
+        throw new Error("Login failed after token set");
+      }
+
+    } catch (error: any) {
+      console.error("[Auth] Login error:", error);
+      
+      // Reset form on error
+      setFormKey(prev => prev + 1);
+      
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else if (error.message?.includes("401") || error.message?.includes("Invalid credentials")) {
+        toast.error("Invalid email or password");
+      } else if (error.message?.includes("Network")) {
+        toast.error("Network error. Please check your connection.");
+      } else {
+        toast.error(error.message || "Failed to sign in. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Optional: Auto-login for testing
+  const handleDemoLogin = () => {
+    setEmail("admin@example.com");
+    setPassword("admin123");
+    // Auto-submit after short delay
+    setTimeout(() => {
+      const formEvent = new Event("submit", { bubbles: true }) as any;
+      const form = document.getElementById("login-form");
+      if (form) {
+        form.dispatchEvent(formEvent);
+      }
+    }, 100);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background/95 to-primary/5 p-4">
+      <Card className="w-full max-w-md p-8 bg-gradient-card border-border/50 shadow-2xl">
+        <div className="flex flex-col items-center mb-8">
+          <div className="p-4 rounded-full bg-gradient-primary mb-4">
+            <GraduationCap className="h-12 w-12 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            EduPro LMS
+          </h1>
+          <p className="text-muted-foreground mt-2">Admin Dashboard Access</p>
+        </div>
+
+        <form 
+          key={formKey}
+          onSubmit={handleLogin} 
+          className="space-y-4"
+          id="login-form"
+        >
+          <div className="space-y-2">
+            <Label htmlFor="email" className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="admin@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              className="bg-background"
+              autoComplete="email"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" className="flex items-center gap-2">
+                <Lock className="h-4 w-4" />
+                Password
+              </Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPassword(!showPassword)}
+                className="h-8 px-2"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-3 w-3" />
+                ) : (
+                  <Eye className="h-3 w-3" />
+                )}
+              </Button>
+            </div>
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              className="bg-background"
+              autoComplete="current-password"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Signing in...
+              </span>
+            ) : (
+              "Sign In"
+            )}
+          </Button>
+
+          {/* Demo button for testing */}
+          {import.meta.env.DEV && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={handleDemoLogin}
+              disabled={loading}
+            >
+              Use Demo Account
+            </Button>
+          )}
+
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground">
+              Don't have an account? Contact your administrator.
+            </p>
+          </div>
+        </form>
+
+        {/* Debug info */}
+        {import.meta.env.DEV && (
+          <div className="mt-4 p-2 bg-muted rounded text-xs">
+            <p>Debug Info:</p>
+            <p>BASENAME: "{BASENAME}"</p>
+            <p>Target: {BASENAME ? `${BASENAME}/dashboard` : "/dashboard"}</p>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
