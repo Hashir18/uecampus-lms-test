@@ -1,0 +1,246 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Default (Light) Theme Colors */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    --primary: 270 80% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 270 90% 60%;
+    
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    
+    --accent: 320 85% 55%;
+    --accent-foreground: 0 0% 100%;
+    
+    --success: 145 65% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 35 90% 60%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 270 80% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 270 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 270 80% 50%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 80% 50%), hsl(280 85% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(320 85% 55%), hsl(340 80% 60%));
+    --gradient-success: linear-gradient(135deg, hsl(145 65% 50%), hsl(155 70% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(240 4.8% 98%), hsl(240 5% 96%));
+    --gradient-hero: linear-gradient(135deg, hsl(240 10% 95%), hsl(250 15% 90%), hsl(260 20% 85%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 0 30px rgba(147, 51, 234, 0.3);
+    --shadow-glow-accent: 0 0 30px rgba(236, 72, 153, 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Dark Mode */
+  .dark {
+    --background: 260 40% 8%;
+    --foreground: 280 20% 96%;
+
+    --card: 260 35% 12%;
+    --card-foreground: 280 20% 96%;
+
+    --popover: 260 35% 12%;
+    --popover-foreground: 280 20% 96%;
+
+    --primary: 270 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 270 90% 70%;
+
+    --secondary: 260 30% 18%;
+    --secondary-foreground: 280 20% 90%;
+
+    --muted: 260 25% 15%;
+    --muted-foreground: 270 10% 60%;
+
+    --accent: 320 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 145 65% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 35 90% 60%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 30% 20%;
+    --input: 260 30% 18%;
+    --ring: 270 80% 60%;
+
+    --sidebar-background: 260 40% 10%;
+    --sidebar-foreground: 280 20% 90%;
+    --sidebar-primary: 270 80% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 260 35% 15%;
+    --sidebar-accent-foreground: 280 20% 90%;
+    --sidebar-border: 260 30% 18%;
+    --sidebar-ring: 270 80% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 80% 60%), hsl(280 85% 70%));
+    --gradient-accent: linear-gradient(135deg, hsl(320 85% 60%), hsl(340 80% 65%));
+    --gradient-success: linear-gradient(135deg, hsl(145 65% 50%), hsl(155 70% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(260 35% 14%), hsl(270 40% 18%));
+    --gradient-hero: linear-gradient(135deg, hsl(260 60% 15%), hsl(270 70% 25%), hsl(280 80% 35%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 0 30px rgba(147, 51, 234, 0.5);
+    --shadow-glow-accent: 0 0 30px rgba(236, 72, 153, 0.5);
+  }
+
+  /* Light Mode (kept for backward compatibility) */
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    --primary: 270 80% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 270 90% 60%;
+    
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    
+    --accent: 320 85% 55%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 270 80% 50%;
+    
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 270 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 270 80% 50%;
+  }
+
+  /* Birthday Mode */
+  .birthday-mode {
+    --background: 340 100% 98%;
+    --foreground: 340 80% 10%;
+    
+    --card: 50 100% 98%;
+    --card-foreground: 340 80% 10%;
+    
+    --popover: 50 100% 98%;
+    --popover-foreground: 340 80% 10%;
+    
+    --primary: 330 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 330 100% 70%;
+    
+    --secondary: 50 100% 85%;
+    --secondary-foreground: 340 80% 10%;
+    
+    --muted: 50 100% 90%;
+    --muted-foreground: 340 50% 40%;
+    
+    --accent: 280 100% 65%;
+    --accent-foreground: 0 0% 100%;
+    
+    --success: 145 70% 55%;
+    --success-foreground: 0 0% 100%;
+    
+    --border: 330 60% 85%;
+    --input: 50 100% 90%;
+    --ring: 330 100% 60%;
+    
+    --sidebar-background: 50 100% 95%;
+    --sidebar-foreground: 340 80% 10%;
+    --sidebar-primary: 330 100% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 50 100% 85%;
+    --sidebar-accent-foreground: 340 80% 10%;
+    --sidebar-border: 330 60% 85%;
+    --sidebar-ring: 330 100% 60%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(330 100% 60%), hsl(280 100% 65%));
+    --gradient-accent: linear-gradient(135deg, hsl(50 100% 70%), hsl(45 100% 65%));
+    --gradient-card: linear-gradient(135deg, hsl(50 100% 96%), hsl(340 100% 96%));
+    --gradient-hero: linear-gradient(135deg, hsl(340 100% 90%), hsl(330 100% 85%), hsl(280 100% 80%));
+    
+    --shadow-glow: 0 0 40px rgba(255, 20, 147, 0.6);
+    --shadow-glow-accent: 0 0 40px rgba(255, 215, 0, 0.6);
+  }
+
+  .birthday-mode body {
+    animation: confetti-bg 20s ease-in-out infinite;
+  }
+
+  @keyframes confetti-bg {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
